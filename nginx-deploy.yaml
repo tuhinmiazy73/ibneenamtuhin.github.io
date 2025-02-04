@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 2  # Number of nginx instances (pods) you want to run
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: tuhin-cv:v1   # Official Nginx image
+        ports:
+        - containerPort: 80  # Expose port 80 inside the container
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      type: NodePort
+      port: 30080  # Port on the Service
+      targetPort: 80  # Port on the Pod
+ 
