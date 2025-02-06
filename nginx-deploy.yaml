@@ -29,7 +29,9 @@ spec:
     app: nginx
   ports:
     - protocol: TCP
-      type: NodePort
-      port: 30080  # Port on the Service
-      targetPort: 80  # Port on the Pod
+      port: 30080        # Port inside the cluster
+      targetPort: 80     # Port inside the container
+      nodePort: 30080    # Explicitly specify the external port (Optional, can be auto-assigned)
+  type: NodePort        # Exposing the service as a NodePort
+
  
