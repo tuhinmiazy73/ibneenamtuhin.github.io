@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: docker.io/tuhin200/tuhin-cv:42
+        image: docker.io/tuhin200/tuhin-cv:43
         ports:
         - containerPort: 80  # Expose port 80 inside the container
 ---
