@@ -1,0 +1,66 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_TAG = "tuhin200/tuhin-cv:${BUILD_NUMBER}"
+        DOCKER_CREDENTIALS = "tuhin200"
+        GIT_REPO = "https://github.com/tuhinmiazy73/tuhin.git"
+        GITHUB_TOKEN_CREDENTIALS = "GITHUB-TOKEN"
+        K8S_MANIFEST_FILE = "nginx-deploy.yaml"
+    }
+
+    triggers {
+        githubPush()
+    }
+
+    stages {
+        stage('CLEANUP WORKSPACE') {
+            steps {
+                script {
+                    cleanWs()
+                }
+            }
+        }
+
+        stage('CHECKOUT GIT REPO') {
+            steps {
+                git branch: 'main', credentialsId: 'tuhinmiazy73', url: "${GIT_REPO}"
+            }
+        }
+
+        stage('BUILD IMAGE AND PUSH TO DOCKER HUB') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                    sh """
+                        docker build -t ${IMAGE_TAG} .
+                        echo ${DOCKER_PASSWORD} | docker login --username ${DOCKER_USERNAME} --password-stdin
+                        docker push ${IMAGE_TAG}
+                        docker logout
+                    """
+                }
+            }
+        }
+
+        stage('UPDATE K8S MANIFEST') {
+            steps {
+                sh """
+                    sed -i "s#docker.io/tuhin200/tuhin-cv:.*#docker.io/tuhin200/tuhin-cv:${BUILD_NUMBER}#" ${K8S_MANIFEST_FILE}
+                """
+            }
+        }
+
+        stage('COMMIT AND PUSH UPDATED K8S MANIFEST TO GITHUB') {
+            steps {
+                withCredentials([string(credentialsId: "${GITHUB_TOKEN_CREDENTIALS}", variable: 'GITHUB_TOKEN')]) {
+                    sh """
+                        git config --global user.email "tuhinmiazy73@gmail.com"
+                        git config --global user.name "tuhinmiazy73"
+                        git add ${K8S_MANIFEST_FILE}
+                        git commit -m "Update K8s manifest with new image tag ${IMAGE_TAG}"
+                        git push https://github-username:${GITHUB_TOKEN}@github.com/tuhinmiazy73/tuhin.git main
+                    """
+                }
+            }
+        }
+    }
+}
