@@ -52,8 +52,7 @@ pipeline {
                         git config --global user.email "tuhinmiazy73@gmail.com"
                         git config --global user.name "tuhinmiazy73"
                         git add ${K8S_MANIFEST_FILE}
-                        git commit -m "Update K8s manifest with new image tag ${IMAGE_TAG}"
-                    	git push https://github-username:${GITHUB_TOKEN}@github.com/tuhinmiazy73/tuhin.git main 
+                        git commit -m "Update K8s manifest with new image tag ${IMAGE_TAG}" 
 		     """
                 }
             }
