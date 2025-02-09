@@ -27,7 +27,7 @@ pipeline {
                     sh """
                         docker build -t ${DOCKER_USERNAME}/${APP-NAME}:${IMAGE_TAG} .
                         echo ${DOCKER_PASSWORD} | docker login --username ${DOCKER_USERNAME} --password-stdin
-                        docker push ${DOCKER_USERNAME}/${APP-NAME} ${IMAGE_TAG}
+                        docker push ${DOCKER_USERNAME}/${APP-NAME}:${IMAGE_TAG}
                         docker logout
                     """
                 }
