@@ -6,7 +6,7 @@ pipeline {
 	APP_NAME = "tuhin-cv"
         GIT_REPO = "https://github.com/tuhinmiazy73/tuhin.git"
         GITHUB_TOKEN_CREDENTIALS = "GITHUB-TOKEN"
-	UPSTRING_CONF_PROJECT_NAME = "conf_pipeline"
+	UPSTRING_CONF_PROJECT_NAME = "app1-conf"
     }
     stages {
         stage('CLEANUP WORKSPACE') {
