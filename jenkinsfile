@@ -33,7 +33,7 @@ pipeline {
                 }
             }
         }
-	stage("TRIGGERING THE CONFIG PIPELINE"){
+	stage("TRIGGERING THE CONF PIPELINE"){
             steps{
                 build job: env.UPSTRING_CONF_PROJECT_NAME, parameters: [string(name: 'IMAGE_TAG', value: env.IMAGE_TAG),string(name: 'APP_NAME', value: env.APP_NAME)]
             }
