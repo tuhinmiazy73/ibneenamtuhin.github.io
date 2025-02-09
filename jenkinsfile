@@ -25,7 +25,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                     sh """
-                        docker build -t ${DOCKER_USERNAME}/${APP_NAME}:${IMAGE_TAG} .
+                        docker build --no-cache -t ${DOCKER_USERNAME}/${APP_NAME}:${IMAGE_TAG} .
                         echo ${DOCKER_PASSWORD} | docker login --username ${DOCKER_USERNAME} --password-stdin
                         docker push ${DOCKER_USERNAME}/${APP_NAME}:${IMAGE_TAG}
                         docker logout
